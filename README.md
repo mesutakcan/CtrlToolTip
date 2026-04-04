@@ -4,6 +4,8 @@
 
 It uses the native [tooltips_class32](https://learn.microsoft.com/en-us/windows/win32/controls/tooltip-controls) control, keeps the API minimal, and works with multiple GUI windows.
 
+![Screen Shot](docs/screenshot.png)
+
 ## Why This Exists
 
 AutoHotkey GUI controls do not provide a small built-in helper for attaching standard Windows tooltips in a simple, reusable way.
@@ -90,6 +92,7 @@ The sample demonstrates:
 - `Text`
 - `Edit`
 - `CheckBox`
+- `Radio`
 - `DropDownList`
 - `ComboBox`
 - `ListBox`
