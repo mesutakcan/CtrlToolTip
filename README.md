@@ -1,8 +1,8 @@
 # CtrlToolTip
 
-`CtrlToolTip` is a small AutoHotkey v2 helper that adds a standard Windows tooltip to a `Gui.Control`.
+`CtrlToolTip` is a small [AutoHotkey](https://www.autohotkey.com/) v2 helper that adds a standard Windows tooltip to a `Gui.Control`.
 
-It uses the native `tooltips_class32` control, keeps the API minimal, and works with multiple GUI windows.
+It uses the native [tooltips_class32](https://learn.microsoft.com/en-us/windows/win32/controls/tooltip-controls) control, keeps the API minimal, and works with multiple GUI windows.
 
 ## Why This Exists
 
@@ -16,7 +16,7 @@ This project exists to keep that job minimal:
 
 ## Requirements
 
-- AutoHotkey v2
+- [AutoHotkey v2](https://www.autohotkey.com/)
 - Windows
 
 ## Files
