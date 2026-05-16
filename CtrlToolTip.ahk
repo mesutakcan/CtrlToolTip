@@ -3,7 +3,7 @@ Adds a standard Windows tooltip to a Gui control.
 version: 1.0
 author: Mesut Akcan
 date: 2026-04-04
-GitHub repository: https://github.com/akcansoft/CtrlToolTip
+GitHub repository: https://github.com/mesutakcan/CtrlToolTip
 
 Usage:
 1. Include this file in your AutoHotkey v2 script with #Include CtrlToolTip.ahk.
