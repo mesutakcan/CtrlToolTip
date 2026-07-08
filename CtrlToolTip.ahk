@@ -1,8 +1,8 @@
 /*
 Adds a standard Windows tooltip to a Gui control.
-version: 1.0
+version: 1.1
 author: Mesut Akcan
-date: 2026-04-04
+date: 2026-07-08
 GitHub repository: https://github.com/mesutakcan/CtrlToolTip
 
 Usage:
@@ -10,11 +10,10 @@ Usage:
 2. Call CtrlToolTip(ctrl, text) for the target Gui.Control.
 
 Example:
-    CtrlToolTip(myControl, "Tooltip text")
+	CtrlToolTip(myControl, "Tooltip text")
 */
 
 #Requires AutoHotkey v2.0
-
 
 ; ctrl: Target Gui.Control that should display the tooltip.
 ; text: Tooltip text to show when the mouse hovers the control.
@@ -35,12 +34,15 @@ CtrlToolTip(ctrl, text) {
 
 	; Ensure static text controls have the SS_NOTIFY style for tooltip support.
 	if (ctrl.Type = "Text") {  ; If the control is a Text control, check and set the SS_NOTIFY style
+		; Use GetWindowLongPtr on 64-bit, GetWindowLong on 32-bit
+		gwlFunc := (A_PtrSize = 8) ? "GetWindowLongPtr" : "GetWindowLong"
+		swlFunc := (A_PtrSize = 8) ? "SetWindowLongPtr" : "SetWindowLong"
 		; Get the current window style of the control
-		style := DllCall("GetWindowLongPtr", "Ptr", ctrl.Hwnd, "Int", GWL_STYLE, "Ptr")
+		style := DllCall(gwlFunc, "Ptr", ctrl.Hwnd, "Int", GWL_STYLE, "Ptr")
 		; If the control does not already have the SS_NOTIFY style, add it
 		if !(style & SS_NOTIFY)
 			; Add the SS_NOTIFY style to the control's window style
-			DllCall("SetWindowLongPtr", "Ptr", ctrl.Hwnd, "Int", GWL_STYLE, "Ptr", style | SS_NOTIFY, "Ptr")
+			DllCall(swlFunc, "Ptr", ctrl.Hwnd, "Int", GWL_STYLE, "Ptr", style | SS_NOTIFY, "Ptr")
 	}
 
 	; Check if a tooltip control already exists for this Gui, and create one if not.

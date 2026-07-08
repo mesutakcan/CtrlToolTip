@@ -3,6 +3,8 @@
 ; A button allows changing its tooltip text on click,
 ; and another button opens a second window with its own controls and tooltips.
 
+; GitHub repository: https://github.com/mesutakcan/CtrlToolTip
+
 #Requires AutoHotkey v2.0
 #Include CtrlToolTip.ahk
 
@@ -17,7 +19,7 @@ CtrlToolTip(txtAbout, "This text control also uses a tooltip.")
 editName := mainGui.AddEdit("w250", "")
 CtrlToolTip(editName, "Enter your name.")
 
-chkOption := mainGui.AddCheckBox(, "Enable option")
+chkOption := mainGui.AddCheckBox(, "Option")
 CtrlToolTip(chkOption, "Turn this option on or off.")
 
 radChoiceA := mainGui.AddRadio("x+5 Checked", "Choice A")
@@ -52,7 +54,7 @@ btnOpenChild := mainGui.AddButton("w250", "Open second window")
 CtrlToolTip(btnOpenChild, "Open a second window`nwith its own tooltips.")
 btnOpenChild.OnEvent("Click", OpenSecondWindow)
 
-link := mainGui.AddLink("w250", '<a href="https://github.com/akcansoft/CtrlToolTip">GitHub repo</a>')
+link := mainGui.AddLink("w250", '<a href="https://github.com/mesutakcan/CtrlToolTip">GitHub repo</a>')
 CtrlToolTip(link, "Open the GitHub page.")
 
 btnClose := mainGui.AddButton("w100 Default", "Close")
