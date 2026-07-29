@@ -134,9 +134,7 @@ The sample demonstrates:
 
 ### v1.2 (2026-07-30)
 
-- Added tooltip show/hide support.
-- Updated the sample script.
-- Updated the documentation.
+- Added support for showing and hiding tooltips by passing an empty string (`""`) or new tooltip text to `CtrlToolTip()`.
 
 ### v1.1 (2026-07-08)
 
