@@ -1,12 +1,13 @@
 /*
 Adds a standard Windows tooltip to a Gui control.
-version: 1.1
+version: 1.2
 author: Mesut Akcan
-date: 2026-07-08
+date: 2026-07-29
 GitHub repository: https://github.com/mesutakcan/CtrlToolTip
 
 Usage:
-1. Include this file in your AutoHotkey v2 script with #Include CtrlToolTip.ahk.
+1. Include this file in your AutoHotkey v2 script with
+   #Include CtrlToolTip.ahk
 2. Call CtrlToolTip(ctrl, text) for the target Gui.Control.
 
 Example:
@@ -16,8 +17,8 @@ Example:
 #Requires AutoHotkey v2.0
 
 ; ctrl: Target Gui.Control that should display the tooltip.
-; text: Tooltip text to show when the mouse hovers the control.
-CtrlToolTip(ctrl, text) {
+; text: Tooltip text to show when the mouse hovers the control. If empty (""), the tooltip for the control is removed.
+CtrlToolTip(ctrl, text := "") {
 	static tipHandles := Map()         ; Map to store tooltip control handles for each parent Gui HWND
 	static textBuffers := Map() 			 ; Map to store text buffers for each control to prevent garbage collection
 	static registeredControls := Map() ; Map to track which controls have been registered with the tooltip control
@@ -31,6 +32,11 @@ CtrlToolTip(ctrl, text) {
 		throw TypeError("CtrlToolTip: Gui.Control expected.", -1)
 
 	guiHwnd := ctrl.Gui.Hwnd ; Get the parent Gui's HWND to associate the tooltip with it.
+
+	; If text is empty and the control was never registered, there is nothing to remove.
+	; Return immediately because no tooltip control needs to be created.
+	if (text = "") && !registeredControls.Has(ctrl.Hwnd)
+		return
 
 	; Ensure static text controls have the SS_NOTIFY style for tooltip support.
 	if (ctrl.Type = "Text") {  ; If the control is a Text control, check and set the SS_NOTIFY style
@@ -79,15 +85,26 @@ CtrlToolTip(ctrl, text) {
 		tipHandles[guiHwnd] := hTip
 	}
 
-	; Prepare the buffer for the tooltip text.
+	; Prepare the TOOLINFO structure.
 	ti := Buffer(24 + (A_PtrSize * 6), 0)                ; Size of TOOLINFO for the current pointer size
-	textBuf := Buffer(StrPut(text, "UTF-16") * 2, 0)     ; Buffer for the tooltip text in UTF-16 encoding
-	StrPut(text, textBuf, "UTF-16")                      ; Write the tooltip text into the buffer
-
 	NumPut("UInt", ti.Size, ti)                          ; cbSize
 	NumPut("UInt", 0x11, ti, 4)                          ; TTF_IDISHWND | TTF_SUBCLASS
 	NumPut("Ptr", guiHwnd, ti, 8)                        ; hwnd
 	NumPut("Ptr", ctrl.Hwnd, ti, 8 + A_PtrSize)          ; uId (use the control's HWND as the unique identifier)
+
+	; If text is empty, remove the tooltip for this control.
+	if (text = "") {
+		if registeredControls.Has(ctrl.Hwnd) {
+			SendMessage(0x0433, 0, ti.Ptr, hTip) ; TTM_DELTOOLW
+			registeredControls.Delete(ctrl.Hwnd)
+			if textBuffers.Has(ctrl.Hwnd)
+				textBuffers.Delete(ctrl.Hwnd)
+		}
+		return
+	}
+
+	textBuf := Buffer(StrPut(text, "UTF-16") * 2, 0)     ; Buffer for the tooltip text in UTF-16 encoding
+	StrPut(text, textBuf, "UTF-16")                      ; Write the tooltip text into the buffer
 	NumPut("Ptr", textBuf.Ptr, ti, 24 + (A_PtrSize * 3)) ; lpszText
 
 	; Update the existing tooltip text for this control.

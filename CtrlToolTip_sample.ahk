@@ -17,7 +17,12 @@ txtAbout := mainGui.AddText("w250", "CtrlToolTip(ctrl, text) adds a standard Win
 CtrlToolTip(txtAbout, "This text control also uses a tooltip.")
 
 editName := mainGui.AddEdit("w250", "")
-CtrlToolTip(editName, "Enter your name.")
+editNameTip := "Enter your name."
+CtrlToolTip(editName, editNameTip)
+
+btnToggleTip := mainGui.AddButton("w250", "Edit control tooltip toggle")
+CtrlToolTip(btnToggleTip, "Toggle the tooltip of the Edit control above.")
+btnToggleTip.OnEvent("Click", ToggleEditNameToolTip)
 
 chkOption := mainGui.AddCheckBox(, "Option")
 CtrlToolTip(chkOption, "Turn this option on or off.")
@@ -65,6 +70,13 @@ mainGui.Show()
 btnClose.GetPos(, &closeY, &closeW, &closeH)
 mainGui.GetClientPos(, , &clientW, &clientH)
 btnClose.Move(clientW - mainGui.MarginX - closeW, clientH - mainGui.MarginY - closeH)
+
+; Show or hide the tooltip of the editName control.
+ToggleEditNameToolTip(*) {
+	static visible := true
+	visible := !visible
+	CtrlToolTip(editName, visible ? editNameTip : "")
+}
 
 ; Change the tooltip text of the button that was clicked.
 ChangeOwnToolTip(ctrl, *) {

@@ -24,7 +24,7 @@ This project exists to keep that job minimal:
 ## Files
 
 - `CtrlToolTip.ahk` - the helper function
-- `CtrlToolTip_sample.ahk` - example GUI showing different control types
+- `CtrlToolTip_sample.ahk` - example GUI showing different control types and tooltip visibility
 
 ## Usage
 
@@ -50,13 +50,22 @@ CtrlToolTip(ctrl, text)
 ```
 
 - `ctrl` - target `Gui.Control`
-- `text` - tooltip text shown when the mouse hovers the control
+- `text` - tooltip text shown when the mouse hovers the control. Pass an empty string (`""`) to hide/remove the tooltip.
+
+To hide a tooltip:
+
+```ahk
+CtrlToolTip(myControl, "")
+```
+
+Call `CtrlToolTip()` again with a non-empty string to show it again.
 
 ## Features
 
 - Uses the standard Windows tooltip control
 - Very small API: one function
 - Automatically updates the tooltip text if called again for the same control
+- Show or hide a tooltip by passing a tooltip string or an empty string
 - Automatically applies `SS_NOTIFY` to `Text` controls so tooltips work there too
 - Keeps tooltip handles per GUI window
 
@@ -70,6 +79,23 @@ btnChange.OnEvent("Click", ChangeTip)
 
 ChangeTip(ctrl, *) {
     CtrlToolTip(ctrl, "Tooltip changed after click.")
+}
+```
+
+## Example: Show / Hide Tooltip
+
+```ahk
+btnToggle := myGui.AddButton("w180", "Toggle tooltip")
+tipText := "This is the tooltip."
+
+CtrlToolTip(btnToggle, tipText)
+
+btnToggle.OnEvent("Click", ToggleTip)
+
+ToggleTip(ctrl, *) {
+    static visible := true
+    visible := !visible
+    CtrlToolTip(ctrl, visible ? tipText : "")
 }
 ```
 
@@ -101,7 +127,23 @@ The sample demonstrates:
 - `Progress`
 - `Link`
 - A button that changes its own tooltip
-- A second GUI window with its own tooltips
+- A button that toggles a tooltip on and off
+- Multiple GUI windows with independent tooltip management
+
+## History
+
+### v1.2 (2026-07-30)
+
+- Added tooltip show/hide support.
+- Updated the sample script.
+- Updated the documentation.
+
+### v1.1 (2026-07-08)
+
+
+### v1.0 (2026-04-04)
+
+- First release
 
 ## License
 
